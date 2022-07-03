@@ -81,6 +81,7 @@ void draw_field()
         printf("\n");
     }
 
+    // информация о счёте и кнопках
     printf("score left: %d    score right: %d               %c\n", scoreLeft, scoreRight, pressedKey);
     printf("--------------------------------------------------------------------------------\n");
     printf("q – exit    a/z – left player   k/m – right player\n");
@@ -213,7 +214,9 @@ void check_win()
 int main()
 {
     nextRound();
-    draw_field(); // первая отрисовка экрана
+
+    // первая отрисовка экрана
+    draw_field();
 
     while (gameOver == 0)
     {
@@ -234,7 +237,7 @@ int main()
 
         if (!keyIsValid)
         {
-            printf("Введите q или a или z или m или k или пробел\n");
+            printf("Enter q or a or z or m or k or SPACE\n");
             continue;
         }
 
@@ -246,7 +249,10 @@ int main()
 
         check_win();
 
-        draw_field();
+        if (!gameOver)
+        {
+            draw_field();
+        }
     }
 
     printf("Выход из программы\nПока!\n");
