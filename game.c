@@ -1,29 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h> // чтобы не надо было нажимать enter
 
+// размеры экрана
 #define SCREEN_WIDTH 60
 #define SCREEN_HEIGHT 20
+
+// высота ракетки
 #define RACKET_HEIGHT 3
+
+// нужный счет для победы
+#define SCORE_COUNT_FOR_WIN 2
 
 // глобальные переменные
 
 // нажатая клавиша
 char pressedKey;
 
+// счёт игроков
+int scoreLeft = 0;
+int scoreRight = 0;
+
 // координаты мяча
-int ballX = 30;
-int ballY = 10;
+int ballX;
+int ballY;
 
 // скорость мяча
 int ballSpeedX = -1;
 int ballSpeedY = 1;
 
 // позиции ракеток
-int racketLeftY = SCREEN_HEIGHT / 2 + 1;
-int racketRightY = SCREEN_HEIGHT / 2 - 2 + 2;
+int racketLeftY;
+int racketRightY;
 
-void write_help()
+void write_info()
 {
+    printf("score left: %d    score right: %d\n", scoreLeft, scoreRight);
+    printf("-------------------------------------------------------------------------------------\n");
     printf("q – exit    a/z – left player   k/m – right player\n");
 }
 
@@ -111,14 +123,14 @@ void move_rackets()
 
 void top_bottom_ricochet()
 {
-    int ballBelowBottom = ballY >= SCREEN_HEIGHT - 1;
+    int ballBelowBottom = ballY >= SCREEN_HEIGHT - 2;
 
     if (ballBelowBottom)
     {
         ballSpeedY = -1;
     }
 
-    int ballAboveTop = ballY <= 0;
+    int ballAboveTop = ballY <= 1;
 
     if (ballAboveTop)
     {
@@ -143,12 +155,44 @@ void racket_ricochet()
     }
 }
 
+void nextRound()
+{
+    ballX = 30;
+    ballY = 10;
+
+    racketLeftY = SCREEN_HEIGHT / 2 - 1;
+    racketRightY = SCREEN_HEIGHT / 2 - 1;
+}
+
+void check_win()
+{
+    int leftPlayerWin = ballX == SCREEN_WIDTH - 1;
+
+    if (leftPlayerWin)
+    {
+        scoreLeft++;
+
+        nextRound();
+    }
+
+    int rightPlayerWin = ballX == 0;
+
+    if (rightPlayerWin)
+    {
+        scoreRight++;
+
+        nextRound();
+    }
+}
+
 void main()
 {
+    nextRound();
+
     while (pressedKey != 'q')
     {
-        write_help();
         draw_field();
+        write_info();
 
         system("stty raw"); // отменяет enter
         pressedKey = getchar();
@@ -161,6 +205,8 @@ void main()
         top_bottom_ricochet();
 
         racket_ricochet();
+
+        check_win();
     }
 
     printf("Выход из программы\nПока!\n");
