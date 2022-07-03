@@ -8,16 +8,16 @@
 // глобальные переменные
 
 // координаты мяча
-int ballX = 5;
+int ballX = 39;
 int ballY = 10;
 
 // скорость мяча
-int ballSpeedX = 1;
+int ballSpeedX = -1;
 int ballSpeedY = 1;
 
 // позиции ракеток
-int racketLeftY = SCREEN_HEIGHT / 2 - 2;
-int racketRightY = SCREEN_HEIGHT / 2 - 2;
+int racketLeftY = SCREEN_HEIGHT / 2 + 1;
+int racketRightY = SCREEN_HEIGHT / 2 - 2 + 2;
 
 void draw_field()
 {
@@ -85,6 +85,23 @@ void top_bottom_ricochet()
     }
 }
 
+void racket_ricochet()
+{
+    int isRightRacket = ballX == SCREEN_WIDTH - 2 && ballY >= racketRightY && ballY < racketRightY + RACKET_HEIGHT;
+
+    if (isRightRacket)
+    {
+        ballSpeedX = -1;
+    }
+
+    int isLeftRacket = ballX == 1 && ballY >= racketLeftY && ballY < racketLeftY + RACKET_HEIGHT;
+
+    if (isLeftRacket)
+    {
+        ballSpeedX = +1;
+    }
+}
+
 void main()
 {
     char pressedKey;
@@ -99,6 +116,7 @@ void main()
         ballY = ballY + ballSpeedY;
 
         top_bottom_ricochet();
+        racket_ricochet();
     }
 
     printf("Выход из программы\nПока!\n");
