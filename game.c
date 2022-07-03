@@ -1,5 +1,4 @@
 #include <stdio.h>
-// #include <stdlib.h> // чтобы не надо было нажимать enter
 
 // размеры экрана
 #define SCREEN_WIDTH 80
@@ -9,14 +8,14 @@
 #define RACKET_HEIGHT 3
 
 // нужный счет для победы
-#define SCORE_COUNT_FOR_WIN 21
+#define SCORE_COUNT_FOR_WIN 2
 
 // глобальные переменные
 
 int gameOver = 0;
 
 // нажатая клавиша
-char pressedKey = ' '; // чтобы отрисовался первый экран!
+char pressedKey;
 
 // счёт игроков
 int scoreLeft = 0;
@@ -33,13 +32,6 @@ int ballSpeedY;
 // позиции ракеток
 int racketLeftY;
 int racketRightY;
-
-void write_info()
-{
-    printf("score left: %d    score right: %d               %c\n", scoreLeft, scoreRight, pressedKey);
-    printf("-------------------------------------------------------------------------------------\n");
-    printf("q – exit    a/z – left player   k/m – right player\n");
-}
 
 void draw_field()
 {
@@ -88,6 +80,10 @@ void draw_field()
 
         printf("\n");
     }
+
+    printf("score left: %d    score right: %d               %c\n", scoreLeft, scoreRight, pressedKey);
+    printf("--------------------------------------------------------------------------------\n");
+    printf("q – exit    a/z – left player   k/m – right player\n");
 }
 
 void move_ball()
@@ -123,7 +119,7 @@ void move_rackets()
     }
 }
 
-void top_bottom_ricochet()
+void ricochet_top_bottom()
 {
     int ballBelowBottom = ballY >= SCREEN_HEIGHT - 2;
 
@@ -140,7 +136,7 @@ void top_bottom_ricochet()
     }
 }
 
-void racket_ricochet()
+void ricochet_racket()
 {
     int isRightRacket = ballX == SCREEN_WIDTH - 2 && ballY >= racketRightY && ballY < racketRightY + RACKET_HEIGHT;
 
@@ -167,7 +163,7 @@ void nextRound()
     if (scoreLeft >= SCORE_COUNT_FOR_WIN)
     {
         draw_field();
-        write_info();
+
         printf("Победил левый\n");
 
         end_game();
@@ -175,7 +171,7 @@ void nextRound()
     else if (scoreRight >= SCORE_COUNT_FOR_WIN)
     {
         draw_field();
-        write_info();
+
         printf("Победил правый\n");
 
         end_game();
@@ -217,31 +213,40 @@ void check_win()
 int main()
 {
     nextRound();
+    draw_field(); // первая отрисовка экрана
 
-    while (pressedKey != 'q' && gameOver == 0)
+    while (gameOver == 0)
     {
-        if (pressedKey != 'q' && pressedKey != 'a' && pressedKey != 'z' && pressedKey != 'm' && pressedKey != 'k' && pressedKey != ' ')
+        scanf("%c", &pressedKey);
+
+        if (pressedKey == 'q')
         {
-            scanf("%c", &pressedKey);
+            break;
+        }
+
+        // enter просто игнорируем
+        if (pressedKey == '\n')
+        {
             continue;
         }
 
-        draw_field();
-        write_info();
+        int keyIsValid = pressedKey == 'a' || pressedKey == 'z' || pressedKey == 'm' || pressedKey == 'k' || pressedKey == ' ';
 
-        // system("stty raw"); // отменяет enter
-        scanf("%c", &pressedKey);
-        // system("stty cooked"); // возвращает enter
+        if (!keyIsValid)
+        {
+            printf("Введите q или a или z или m или k или пробел\n");
+            continue;
+        }
 
         move_ball();
-
         move_rackets();
 
-        top_bottom_ricochet();
-
-        racket_ricochet();
+        ricochet_top_bottom();
+        ricochet_racket();
 
         check_win();
+
+        draw_field();
     }
 
     printf("Выход из программы\nПока!\n");
