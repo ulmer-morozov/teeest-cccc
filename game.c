@@ -1,5 +1,5 @@
 #include <stdio.h>
-// #include <stdlib.h>
+#include <stdlib.h> // чтобы не надо было нажимать enter
 
 #define SCREEN_WIDTH 60
 #define SCREEN_HEIGHT 20
@@ -18,6 +18,11 @@ int ballSpeedY = 1;
 // позиции ракеток
 int racketLeftY = SCREEN_HEIGHT / 2 + 1;
 int racketRightY = SCREEN_HEIGHT / 2 - 2 + 2;
+
+void write_help()
+{
+    printf("q – exit    a/z – left player   k/m – right player\n");
+}
 
 void draw_field()
 {
@@ -108,9 +113,12 @@ void main()
 
     while (pressedKey != 'q')
     {
+        write_help();
         draw_field();
 
+        system("stty raw"); // отменяет enter
         pressedKey = getchar();
+        system("stty cooked"); 
 
         ballX = ballX + ballSpeedX;
         ballY = ballY + ballSpeedY;
