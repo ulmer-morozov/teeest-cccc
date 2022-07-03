@@ -8,7 +8,7 @@
 #define RACKET_HEIGHT 3
 
 // нужный счет для победы
-#define SCORE_COUNT_FOR_WIN 2
+#define SCORE_COUNT_FOR_WIN 21
 
 // глобальные переменные
 
@@ -75,7 +75,7 @@ void draw_field()
                 continue;
             }
 
-            printf(".");
+            printf(" ");
         }
 
         printf("\n");
@@ -165,7 +165,7 @@ void nextRound()
     {
         draw_field();
 
-        printf("Победил левый\n");
+        printf("Congratulations LEFT (!!!)\n");
 
         end_game();
     }
@@ -173,7 +173,7 @@ void nextRound()
     {
         draw_field();
 
-        printf("Победил правый\n");
+        printf("Congratulations RIGHT (!!!)\n");
 
         end_game();
     }
