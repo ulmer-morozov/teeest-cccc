@@ -4,13 +4,25 @@
 #define SCREEN_WIDTH 60
 #define SCREEN_HEIGHT 20
 
-void drawField(int ballPosX, int ballPosY)
+// глобальные переменные
+
+// координаты мяча
+int ballX = 5;
+int ballY = 10;
+
+// скорость мяча
+int ballSpeedX = 1;
+int ballSpeedY = 1;
+
+void draw_field()
 {
+    // строчки
     for (int y = 0; y < SCREEN_HEIGHT; y++)
     {
+        // заполняем строку символами слева направо
         for (int x = 0; x < SCREEN_WIDTH; x++)
         {
-            int isBall = x == ballPosX && y == ballPosY;
+            int isBall = x == ballX && y == ballY;
 
             if (isBall)
             {
@@ -19,11 +31,18 @@ void drawField(int ballPosX, int ballPosY)
             }
 
             int isFirstOrLastRow = y == 0 || y == SCREEN_HEIGHT - 1;
-            int isFirstOrLastColumn = x == 0 || x == SCREEN_WIDTH - 1;
 
-            if (isFirstOrLastRow || isFirstOrLastColumn)
+            if (isFirstOrLastRow)
             {
                 printf("#");
+                continue;
+            }
+
+            int isFirstOrLastColumn = x == 0 || x == SCREEN_WIDTH - 1;
+
+            if (isFirstOrLastColumn)
+            {
+                printf("|");
                 continue;
             }
 
@@ -34,20 +53,38 @@ void drawField(int ballPosX, int ballPosY)
     }
 }
 
+void top_bottom_ricochet()
+{
+    int ballBelowBottom = ballY >= SCREEN_HEIGHT - 1;
+
+    if (ballBelowBottom)
+    {
+        ballSpeedY = -1;
+    }
+
+    int ballAboveTop = ballY <= 0;
+
+    if (ballAboveTop)
+    {
+        ballSpeedY = +1;
+    }
+}
+
 void main()
 {
-    int wantToPlay = 1;
+    char pressedKey;
 
-    int ballX = 16;
-    int ballY = 8;
-
-    while (wantToPlay == 1)
+    while (pressedKey != 'q')
     {
-        scanf("%d", &wantToPlay);
+        draw_field();
 
-        drawField(ballX, ballY);
+        pressedKey = getchar();
 
-        ballX++;
-        ballY++;
+        ballX = ballX + ballSpeedX;
+        ballY = ballY + ballSpeedY;
+
+        top_bottom_ricochet();
     }
+
+    printf("Выход из программы\nПока!\n");
 }
