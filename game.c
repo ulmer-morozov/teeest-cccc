@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h> // чтобы не надо было нажимать enter
+// #include <stdlib.h> // чтобы не надо было нажимать enter
 
 // размеры экрана
 #define SCREEN_WIDTH 60
@@ -27,8 +27,8 @@ int ballX;
 int ballY;
 
 // скорость мяча
-int ballSpeedX = -1;
-int ballSpeedY = 1;
+int ballSpeedX;
+int ballSpeedY;
 
 // позиции ракеток
 int racketLeftY;
@@ -36,7 +36,7 @@ int racketRightY;
 
 void write_info()
 {
-    printf("score left: %d    score right: %d\n", scoreLeft, scoreRight);
+    printf("score left: %d    score right: %d           (%d)\n", scoreLeft, scoreRight, pressedKey);
     printf("-------------------------------------------------------------------------------------\n");
     printf("q – exit    a/z – left player   k/m – right player\n");
 }
@@ -185,6 +185,9 @@ void nextRound()
         ballX = 30;
         ballY = 10;
 
+        ballSpeedX = 1;
+        ballSpeedY = 1;
+
         racketLeftY = SCREEN_HEIGHT / 2 - 1;
         racketRightY = SCREEN_HEIGHT / 2 - 1;
     }
@@ -217,12 +220,22 @@ void main()
 
     while (pressedKey != 'q' && gameOver == 0)
     {
-        draw_field();
-        write_info();
+        // чтобы не отрисовывался экран лишний раз
+        if (pressedKey != '\n')
+        {
+            draw_field();
+            write_info();
+        }
 
-        system("stty raw"); // отменяет enter
-        pressedKey = getchar();
-        system("stty cooked"); // возвращает enter
+        // system("stty raw"); // отменяет enter
+        scanf("%c", &pressedKey);
+        // system("stty cooked"); // возвращает enter
+
+        // чтобы не двигался мяч из-за enter
+        if (pressedKey == '\n')
+        {
+            continue;
+        }
 
         move_ball();
 
