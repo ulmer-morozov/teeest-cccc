@@ -1,3 +1,5 @@
+// Copyright 2022 Gastropub Gabriel
+
 #include <stdio.h>
 
 // размеры экрана
