@@ -7,8 +7,11 @@
 
 // глобальные переменные
 
+// нажатая клавиша
+char pressedKey;
+
 // координаты мяча
-int ballX = 39;
+int ballX = 30;
 int ballY = 10;
 
 // скорость мяча
@@ -73,6 +76,39 @@ void draw_field()
     }
 }
 
+void move_ball()
+{
+    ballX = ballX + ballSpeedX;
+    ballY = ballY + ballSpeedY;
+}
+
+void move_rackets()
+{
+    // чтобы левая ракетка не убегала вверх
+    if (pressedKey == 'a' && racketLeftY > 1)
+    {
+        racketLeftY--;
+    }
+
+    // чтобы правая ракетка не убегала вниз
+    if (pressedKey == 'z' && racketLeftY < SCREEN_HEIGHT - RACKET_HEIGHT - 1)
+    {
+        racketLeftY++;
+    }
+
+    // чтобы правая ракетка не убегала вверх
+    if (pressedKey == 'k' && racketRightY > 1)
+    {
+        racketRightY--;
+    }
+
+    // чтобы правая ракетка не убегала вниз
+    if (pressedKey == 'm' && racketRightY < SCREEN_HEIGHT - RACKET_HEIGHT - 1)
+    {
+        racketRightY++;
+    }
+}
+
 void top_bottom_ricochet()
 {
     int ballBelowBottom = ballY >= SCREEN_HEIGHT - 1;
@@ -109,8 +145,6 @@ void racket_ricochet()
 
 void main()
 {
-    char pressedKey;
-
     while (pressedKey != 'q')
     {
         write_help();
@@ -118,12 +152,14 @@ void main()
 
         system("stty raw"); // отменяет enter
         pressedKey = getchar();
-        system("stty cooked"); 
+        system("stty cooked"); // возвращает enter
 
-        ballX = ballX + ballSpeedX;
-        ballY = ballY + ballSpeedY;
+        move_ball();
+
+        move_rackets();
 
         top_bottom_ricochet();
+
         racket_ricochet();
     }
 
