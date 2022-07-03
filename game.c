@@ -9,9 +9,11 @@
 #define RACKET_HEIGHT 3
 
 // нужный счет для победы
-#define SCORE_COUNT_FOR_WIN 2
+#define SCORE_COUNT_FOR_WIN 21
 
 // глобальные переменные
+
+int gameOver = 0;
 
 // нажатая клавиша
 char pressedKey;
@@ -155,13 +157,37 @@ void racket_ricochet()
     }
 }
 
+void end_game()
+{
+    gameOver = 1;
+}
+
 void nextRound()
 {
-    ballX = 30;
-    ballY = 10;
+    if (scoreLeft >= SCORE_COUNT_FOR_WIN)
+    {
+        draw_field();
+        write_info();
+        printf("Победил левый\n");
 
-    racketLeftY = SCREEN_HEIGHT / 2 - 1;
-    racketRightY = SCREEN_HEIGHT / 2 - 1;
+        end_game();
+    }
+    else if (scoreRight >= SCORE_COUNT_FOR_WIN)
+    {
+        draw_field();
+        write_info();
+        printf("Победил правый\n");
+
+        end_game();
+    }
+    else
+    {
+        ballX = 30;
+        ballY = 10;
+
+        racketLeftY = SCREEN_HEIGHT / 2 - 1;
+        racketRightY = SCREEN_HEIGHT / 2 - 1;
+    }
 }
 
 void check_win()
@@ -189,7 +215,7 @@ void main()
 {
     nextRound();
 
-    while (pressedKey != 'q')
+    while (pressedKey != 'q' && gameOver == 0)
     {
         draw_field();
         write_info();
