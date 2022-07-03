@@ -3,6 +3,7 @@
 
 #define SCREEN_WIDTH 60
 #define SCREEN_HEIGHT 20
+#define RACKET_HEIGHT 3
 
 // глобальные переменные
 
@@ -13,6 +14,10 @@ int ballY = 10;
 // скорость мяча
 int ballSpeedX = 1;
 int ballSpeedY = 1;
+
+// позиции ракеток
+int racketLeftY = SCREEN_HEIGHT / 2 - 2;
+int racketRightY = SCREEN_HEIGHT / 2 - 2;
 
 void draw_field()
 {
@@ -27,6 +32,16 @@ void draw_field()
             if (isBall)
             {
                 printf("O");
+                continue;
+            }
+
+            int isLeftRacket = x == 0 && y >= racketLeftY && y < racketLeftY + RACKET_HEIGHT;
+
+            int isRightRacket = x == SCREEN_WIDTH - 1 && y >= racketRightY && y < racketRightY + RACKET_HEIGHT;
+
+            if (isLeftRacket || isRightRacket)
+            {
+                printf("@");
                 continue;
             }
 
